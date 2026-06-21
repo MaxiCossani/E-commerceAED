@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MundialMarket — Marketplace Mundialista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde: #1a5c36;
+      --verde-light: #2d8a55;
+      --verde-dark: #0f3d24;
+      --dorado: #d4a017;
+      --gris-suave: #f5f5f0;
+      --gris-texto: #444;
+      --gris-borde: #ddd;
+      --rojo-badge: #c0392b;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gris-suave);
+      color: var(--gris-texto);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--verde-dark);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      border-bottom: 3px solid var(--dorado);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--dorado);
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo span {
+      font-size: 13px;
+      color: #aaa;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #ccc;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--dorado); }
+    .nav-cart {
+      background: var(--dorado);
+      color: var(--verde-dark);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .nav-cart:hover { background: #f0c040; }
+    .cart-badge {
+      background: var(--rojo-badge);
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--verde);
+      padding: 52px 32px 40px;
+      text-align: center;
+      border-bottom: 3px solid var(--dorado);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '⚽';
+      position: absolute;
+      font-size: 220px;
+      opacity: 0.05;
+      right: -20px;
+      top: -20px;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .hero-tag {
+      background: var(--dorado);
+      color: var(--verde-dark);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      color: #fff;
+      letter-spacing: 4px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: #a8d5b5;
+      font-size: 16px;
+      max-width: 520px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 24px;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 34px;
+      color: var(--dorado);
+      letter-spacing: 1px;
+    }
+    .hero-stat-label {
+      font-size: 11px;
+      color: #7ab98a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      background: #fff;
+      border-bottom: 1px solid var(--gris-borde);
+      display: flex;
+      padding: 0 32px;
+    }
+    .tab-btn {
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #888;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); font-weight: 600; }
+    .tab-btn:hover:not(.active) { color: var(--verde-light); }
+
+    /* ── CONTENT ── */
+    .content { padding: 32px; max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--verde-dark);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .section-sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+
+    /* ── FILTERS ── */
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .filter-chip {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      border: 1px solid var(--gris-borde);
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+      color: #666;
+    }
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--verde);
+      color: #fff;
+      border-color: var(--verde);
+    }
+
+    /* ── PRODUCT GRID ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 20px;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--gris-borde);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .product-img {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      background: var(--gris-suave);
+      position: relative;
+    }
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 10px;
+    }
+    .badge-intercambio { background: #fff3cd; color: #856404; }
+    .badge-venta       { background: #d4edda; color: #155724; }
+    .badge-raro        { background: #f8d7da; color: #721c24; }
+    .product-body { padding: 14px; }
+    .product-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .product-meta { font-size: 12px; color: #888; margin-bottom: 10px; }
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .product-price { font-size: 17px; font-weight: 700; color: var(--verde-dark); }
+    .btn-add {
+      background: var(--verde);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .btn-add:hover { background: var(--verde-light); }
+
+    /* ── CART ── */
+    .cart-section {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--gris-borde);
+      padding: 24px;
+      max-width: 680px;
+    }
+    .cart-empty { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; line-height: 2; }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .cart-item-emoji { font-size: 36px; width: 52px; text-align: center; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 14px; font-weight: 600; color: #222; }
+    .cart-item-meta { font-size: 12px; color: #888; margin-top: 2px; }
+    .cart-item-price { font-size: 16px; font-weight: 700; color: var(--verde-dark); }
+    .cart-item-remove {
+      background: none;
+      border: none;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color 0.2s;
+    }
+    .cart-item-remove:hover { color: var(--rojo-badge); }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--gris-borde);
+    }
+    .btn-checkout {
+      background: var(--verde);
+      color: #fff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 1px;
+      font-size: 20px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 14px;
+      transition: background 0.2s;
+    }
+    .btn-checkout:hover { background: var(--verde-dark); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      max-width: 420px;
+      width: 92%;
+      overflow: hidden;
+      border-top: 4px solid var(--dorado);
+      animation: pop 0.2s ease;
+    }
+    @keyframes pop {
+      from { transform: scale(0.92); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+    .modal-head {
+      background: var(--verde);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-head h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 26px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-body { padding: 20px; }
+    .modal-emoji { font-size: 70px; text-align: center; margin-bottom: 10px; }
+    .modal-price { font-size: 26px; font-weight: 700; color: var(--verde-dark); margin-bottom: 16px; }
+    .modal-field {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .modal-field-label { color: #888; font-weight: 500; }
+    .modal-field-val   { color: #333; font-weight: 600; }
+    .btn-modal-add {
+      background: var(--verde);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 1px;
+      font-size: 20px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 16px;
+      transition: background 0.2s;
+    }
+    .btn-modal-add:hover { background: var(--verde-dark); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--verde-dark);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.3s;
+      pointer-events: none;
+      border-left: 4px solid var(--dorado);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--verde-dark);
+      color: #7ab98a;
+      text-align: center;
+      padding: 24px 32px;
+      font-size: 13px;
+      margin-top: 60px;
+      border-top: 3px solid var(--dorado);
+    }
+    footer strong { color: var(--dorado); }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 42px; }
+      .hero-stats { gap: 20px; }
+      .nav-logo span { display: none; }
+      .content { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">⚽ MUNDIALMARKET <span>Colecciones del mundo</span></div>
+  <div class="nav-links">
+    <a class="active" onclick="showTab('catalogo')">Catálogo</a>
+    <a onclick="showTab('carrito')">Mi carrito</a>
+  </div>
+  <button class="nav-cart" onclick="showTab('carrito')">
+    🛒 Carrito <span class="cart-badge" id="cart-count">0</span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">🏆 Mundial Market · Temporada 2026</div>
+  <h1>EL MERCADO<br>MUNDIALISTA</h1>
+  <p>Comprá, vendé e intercambiá objetos de colección de todos los Mundiales. Figuritas, camisetas, pins y mucho más.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">342</div>
+      <div class="hero-stat-label">Artículos</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">18</div>
+      <div class="hero-stat-label">Países</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">1.2K</div>
+      <div class="hero-stat-label">Coleccionistas</div>
+    </div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('catalogo')">Catálogo</button>
+  <button class="tab-btn" onclick="showTab('carrito')">Mi carrito</button>
+</div>
+
+<!-- CATALOGO -->
+<div id="tab-catalogo" class="tab-content active">
+  <div class="content">
+    <div class="section-title">Artículos disponibles</div>
+    <p class="section-sub">Seleccioná una categoría para filtrar</p>
+    <div class="filters">
+      <span class="filter-chip active" onclick="filterProducts('todos', this)">Todos</span>
+      <span class="filter-chip" onclick="filterProducts('figurita', this)">Figuritas</span>
+      <span class="filter-chip" onclick="filterProducts('camiseta', this)">Camisetas</span>
+      <span class="filter-chip" onclick="filterProducts('pin', this)">Pins / Medallas</span>
+      <span class="filter-chip" onclick="filterProducts('album', this)">Álbumes</span>
+    </div>
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+</div>
+
+<!-- CARRITO -->
+<div id="tab-carrito" class="tab-content">
+  <div class="content">
+    <div class="section-title">Mi carrito</div>
+    <p class="section-sub">Artículos seleccionados para comprar o intercambiar</p>
+    <div class="cart-section">
+      <div id="cart-items"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOverlay(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h4 id="modal-title">Artículo</h4>
+      <button class="modal-close" onclick="closeModalDirect()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-emoji" id="modal-emoji"></div>
+      <div class="modal-price" id="modal-price"></div>
+      <div id="modal-fields"></div>
+      <button class="btn-modal-add" id="modal-add-btn">Agregar al carrito</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>MundialMarket</strong> · Marketplace de coleccionables mundialistas · Temporada 2026<br>
+  Proyecto académico — Algoritmos y Estructuras de Datos 2026
+</footer>
+
+<script>
+  const PRODUCTS = [
+    { id: 10000001, nombre: "Figurita Maradona Brillante",  categoria: "Figurita", mundial: "México 1986",       pais: "Argentina", emoji: "⭐", precio: 4500,  modo: "Venta",       estado: "Mint",       raro: true,  vendedor: 1001 },
+    { id: 10000002, nombre: "Figurita Pelé Dorada",          categoria: "Figurita", mundial: "México 1970",       pais: "Brasil",    emoji: "🌟", precio: 6200,  modo: "Ambos",       estado: "Muy bueno",  raro: true,  vendedor: 1002 },
+    { id: 10000003, nombre: "Figurita Messi (repetida)",     categoria: "Figurita", mundial: "Qatar 2022",        pais: "Argentina", emoji: "🔵", precio: 800,   modo: "Intercambio", estado: "Mint",       raro: false, vendedor: 1001 },
+    { id: 10000004, nombre: "Camiseta Argentina 1986",       categoria: "Camiseta", mundial: "México 1986",       pais: "Argentina", emoji: "👕", precio: 28000, modo: "Venta",       estado: "Bueno",      raro: true,  vendedor: 1003 },
+    { id: 10000005, nombre: "Camiseta Brasil 1970 Réplica",  categoria: "Camiseta", mundial: "México 1970",       pais: "Brasil",    emoji: "🟡", precio: 15000, modo: "Venta",       estado: "Muy bueno",  raro: false, vendedor: 1002 },
+    { id: 10000006, nombre: "Pin Oficial Francia 1998",      categoria: "Pin",      mundial: "Francia 1998",      pais: "Francia",   emoji: "📌", precio: 2200,  modo: "Ambos",       estado: "Mint",       raro: false, vendedor: 1004 },
+    { id: 10000007, nombre: "Álbum Panini Italia 1990",      categoria: "Álbum",    mundial: "Italia 1990",       pais: "-",         emoji: "📔", precio: 12000, modo: "Venta",       estado: "Regular",    raro: true,  vendedor: 1005 },
+    { id: 10000008, nombre: "Medalla Copa del Mundo 2002",   categoria: "Pin",      mundial: "Corea-Japón 2002",  pais: "Brasil",    emoji: "🥇", precio: 5500,  modo: "Venta",       estado: "Muy bueno",  raro: false, vendedor: 1003 },
+  ];
+
+  let cart = [];
+  let currentFilter = 'todos';
+
+  function filterProducts(cat, el) {
+    currentFilter = cat;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderProducts();
+  }
+
+  function renderProducts() {
+    const grid = document.getElementById('products-grid');
+    const filtered = PRODUCTS.filter(p => {
+      if (currentFilter === 'todos')     return true;
+      if (currentFilter === 'figurita')  return p.categoria === 'Figurita';
+      if (currentFilter === 'camiseta')  return p.categoria === 'Camiseta';
+      if (currentFilter === 'pin')       return p.categoria === 'Pin';
+      if (currentFilter === 'album')     return p.categoria === 'Álbum';
+      return true;
+    });
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card" onclick="openModal(${p.id})">
+        <div class="product-img">
+          ${p.emoji}
+          <span class="product-badge ${p.modo === 'Intercambio' ? 'badge-intercambio' : p.raro ? 'badge-raro' : 'badge-venta'}">
+            ${p.raro ? '⭐ Raro' : p.modo}
+          </span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">${p.nombre}</div>
+          <div class="product-meta">${p.mundial} · ${p.pais}</div>
+          <div class="product-footer">
+            <div class="product-price">${p.modo === 'Intercambio' ? 'Intercambio' : '$' + p.precio.toLocaleString('es-AR')}</div>
+            <button class="btn-add" onclick="event.stopPropagation(); addToCart(${p.id})">+ Agregar</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openModal(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('modal-title').textContent = p.nombre;
+    document.getElementById('modal-emoji').textContent = p.emoji;
+    document.getElementById('modal-price').textContent =
+      p.modo === 'Intercambio' ? 'Intercambio' : '$' + p.precio.toLocaleString('es-AR');
+    document.getElementById('modal-fields').innerHTML = [
+      ['Mundial',     p.mundial],
+      ['País / Equipo', p.pais],
+      ['Categoría',   p.categoria],
+      ['Estado',      p.estado],
+      ['Modalidad',   p.modo],
+      ['Pieza rara',  p.raro ? 'Sí ⭐' : 'No'],
+    ].map(([label, val]) => `
+      <div class="modal-field">
+        <span class="modal-field-label">${label}</span>
+        <span class="modal-field-val">${val}</span>
+      </div>
+    `).join('');
+    document.getElementById('modal-add-btn').onclick = () => { addToCart(id); closeModalDirect(); };
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModalOverlay(e) { if (e.target === document.getElementById('modal')) closeModalDirect(); }
+  function closeModalDirect()   { document.getElementById('modal').classList.remove('open'); }
+
+  function addToCart(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+    const existing = cart.find(x => x.id === id);
+    if (existing) { existing.qty++; } else { cart.push({ ...p, qty: 1 }); }
+    updateCart();
+    showToast('✅ ' + p.nombre + ' agregado al carrito');
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(x => x.id !== id);
+    updateCart();
+  }
+
+  function updateCart() {
+    const total = cart.reduce((s, x) => s + x.precio * x.qty, 0);
+    const count = cart.reduce((s, x) => s + x.qty, 0);
+    document.getElementById('cart-count').textContent = count;
+    const div = document.getElementById('cart-items');
+    if (cart.length === 0) {
+      div.innerHTML = '<div class="cart-empty">⚽<br><br>Tu carrito está vacío.<br>Explorá el catálogo y agregá artículos.</div>';
+      return;
+    }
+    div.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-emoji">${item.emoji}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.nombre}</div>
+          <div class="cart-item-meta">${item.mundial} · Cantidad: ${item.qty}</div>
+        </div>
+        <div class="cart-item-price">${item.modo === 'Intercambio' ? 'Intercambio' : '$' + (item.precio * item.qty).toLocaleString('es-AR')}</div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">×</button>
+      </div>
+    `).join('') + `
+      <div class="cart-total">
+        <span style="font-size:17px;font-weight:600">Total estimado</span>
+        <span style="font-size:24px;font-weight:700;color:var(--verde-dark)">$${total.toLocaleString('es-AR')}</span>
+      </div>
+      <button class="btn-checkout" onclick="checkout()">CONFIRMAR PEDIDO</button>
+    `;
+  }
+
+  function checkout() {
+    showToast('🏆 ¡Pedido confirmado! Los vendedores se contactarán a la brevedad.');
+    cart = [];
+    updateCart();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  function showTab(name) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    const map = { catalogo: 0, carrito: 1 };
+    if (map[name] !== undefined) {
+      document.querySelectorAll('.tab-btn')[map[name]].classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach((a, i) =>
+        a.classList.toggle('active', i === map[name])
+      );
+    }
+  }
+
+  renderProducts();
+  updateCart();
+</script>
+</body>
+</html>
