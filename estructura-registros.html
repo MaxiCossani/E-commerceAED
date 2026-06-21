@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estructura de Registros — MundialMarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --verde: #1a5c36; --verde-light: #2d8a55; --verde-dark: #0f3d24;
+      --dorado: #d4a017; --gris-suave: #f5f5f0; --gris-borde: #ddd;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--gris-suave); color: #333; padding: 40px 24px; }
+    .page { max-width: 860px; margin: 0 auto; }
+
+    /* HEADER */
+    .doc-header {
+      background: var(--verde-dark);
+      border-radius: 12px;
+      padding: 32px 36px;
+      margin-bottom: 32px;
+      border-bottom: 4px solid var(--dorado);
+    }
+    .doc-header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      color: var(--dorado);
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+    .doc-header p { color: #a8d5b5; font-size: 14px; line-height: 1.7; }
+    .doc-header .meta { margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; }
+    .doc-header .meta span {
+      background: rgba(255,255,255,0.08);
+      color: #ccc;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* SECTION */
+    .section { margin-bottom: 36px; }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      color: var(--verde-dark);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--dorado);
+    }
+    .section-sub { font-size: 13px; color: #888; margin-bottom: 20px; margin-top: 4px; }
+
+    /* REGISTRO BOX */
+    .registro-box {
+      background: #fff;
+      border-radius: 10px;
+      border: 1.5px solid var(--verde);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .registro-box-header {
+      background: var(--verde);
+      padding: 12px 20px;
+    }
+    .registro-box-header h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .registro-box-header p { font-size: 12px; color: #a8d5b5; margin-top: 2px; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: var(--verde-dark); }
+    thead th { color: #fff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 10px 16px; text-align: left; }
+    tbody tr:nth-child(even) { background: #fafafa; }
+    tbody tr:hover { background: #f0f7f3; }
+    td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .campo-name { font-weight: 600; color: #222; display: flex; align-items: center; gap: 6px; }
+    .key-badge { background: var(--dorado); color: var(--verde-dark); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+    .fk-badge  { background: #e3f2fd; color: #1565c0; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+    .tipo-badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .tipo-N    { background: #e3f2fd; color: #1565c0; }
+    .tipo-AN   { background: #f3e5f5; color: #6a1b9a; }
+    .tipo-A    { background: #e8f5e9; color: #2e7d32; }
+    .tipo-L    { background: #fff8e1; color: #f57f17; }
+    .tipo-ENUM { background: #fce4ec; color: #880e4f; }
+    .tipo-R    { background: #e0f2f1; color: #00695c; }
+    .tipo-REG  { background: #ede7f6; color: #4527a0; }
+    .sub-row td { background: #f9f5ff !important; }
+    .sub-row .campo-name { padding-left: 20px; color: #7b1fa2; font-size: 12px; }
+    .sub-row .campo-name::before { content: '↳'; margin-right: 4px; color: #9c4dcc; }
+    td.desc { color: #666; font-style: italic; font-size: 12px; }
+
+    /* CLAVE JUSTIF */
+    .clave-box {
+      background: #fffde7;
+      border: 1.5px solid var(--dorado);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-top: 20px;
+      display: flex;
+      gap: 14px;
+    }
+    .clave-box-icon { font-size: 26px; flex-shrink: 0; }
+    .clave-box-title { font-size: 14px; font-weight: 600; color: #a07010; margin-bottom: 6px; }
+    .clave-box-text { font-size: 13px; color: #555; line-height: 1.7; }
+
+    /* PSEUDOCODE */
+    .pseudo-block {
+      background: #0f3d24;
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+    .pseudo-block pre {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      color: #a8d5b5;
+      line-height: 2;
+      white-space: pre;
+    }
+    .pseudo-block pre .kw  { color: var(--dorado); font-weight: bold; }
+    .pseudo-block pre .pk  { color: #90ee90; }
+    .pseudo-block pre .fk  { color: #87ceeb; }
+    .pseudo-block pre .cmt { color: #5a8a6a; font-style: italic; }
+
+    /* CLASSIFICATION */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+    .info-card {
+      background: #fff;
+      border: 1px solid var(--gris-borde);
+      border-radius: 10px;
+      padding: 18px;
+      border-top: 3px solid var(--verde);
+    }
+    .info-card h4 { font-size: 14px; font-weight: 600; color: var(--verde-dark); margin-bottom: 8px; }
+    .info-card p  { font-size: 13px; color: #666; line-height: 1.6; }
+    .info-card .tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 10px;
+      background: #e8f5e9;
+      color: var(--verde);
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 48px;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      border-top: 1px solid var(--gris-borde);
+    }
+    footer strong { color: var(--verde); }
+
+    @media print {
+      body { background: #fff; padding: 20px; }
+      .doc-header { border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <h1>⚽ MUNDIALMARKET</h1>
+    <p>Documento técnico de diseño — Estructura de Registros<br>
+       Aplicación de conceptos de Algoritmos y Estructuras de Datos</p>
+    <div class="meta">
+      <span>📚 Cátedra: Algoritmos y Estructuras de Datos 2026</span>
+      <span>🗂️ Tema 7: Secuencia de Registros</span>
+      <span>🛒 Proyecto: MundialMarket</span>
+    </div>
+  </div>
+
+  <!-- DESCRIPCION -->
+  <div class="section">
+    <div class="section-title">Descripción del proyecto</div>
+    <p class="section-sub">Contexto del e-commerce y problema que resuelve</p>
+    <div style="background:#fff;border-radius:10px;border:1px solid var(--gris-borde);padding:20px;font-size:14px;line-height:1.8;color:#444">
+      <strong>MundialMarket</strong> es un marketplace dedicado a la compraventa e intercambio de objetos de colección relacionados con los Mundiales de Fútbol. Los usuarios pueden publicar y adquirir figuritas repetidas, camisetas de ediciones históricas, pins oficiales, álbumes y otros artículos coleccionables.<br><br>
+      Para modelar la información de cada artículo publicado en el sistema, se diseñó el registro <strong>ARTICULO_MUNDIALISTA</strong>, que permite almacenar de forma estructurada y heterogénea todos los datos relevantes de un artículo, identificarlo de manera única y relacionarlo con el vendedor correspondiente.
+    </div>
+  </div>
+
+  <!-- REGISTRO PRINCIPAL -->
+  <div class="section">
+    <div class="section-title">Registro principal: ARTICULO_MUNDIALISTA</div>
+    <p class="section-sub">Estructura estática — almacenamiento en memoria interna — heterogeneidad de datos</p>
+
+    <div class="registro-box">
+      <div class="registro-box-header">
+        <h3>ARTICULO_MUNDIALISTA = Registro</h3>
+        <p>Registro principal del sistema · 13 campos · incluye campo continente y clave foránea</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Campo (Nombre)</th>
+            <th>Tipo · Tamaño</th>
+            <th>Clasificación</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="campo-name"><span class="key-badge">🔑 PK</span> id_articulo</div></td>
+            <td><span class="tipo-badge tipo-N">N (8)</span></td>
+            <td>Contenido · Simple</td>
+            <td class="desc">Clave primaria. Número entero autogenerado. Identifica el artículo de forma única en todo el sistema.</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">nombre</div></td>
+            <td><span class="tipo-badge tipo-AN">AN (100)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Nombre descriptivo del artículo publicado. Alfanumérico de hasta 100 caracteres.</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">categoria</div></td>
+            <td><span class="tipo-badge tipo-ENUM">ENUM</span></td>
+            <td>Contenido</td>
+            <td class="desc">"Figurita" | "Camiseta" | "Pin" | "Álbum" | "Otro"</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">mundial</div></td>
+            <td><span class="tipo-badge tipo-AN">AN (30)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Año y sede del Mundial. Ej: "México 1986", "Qatar 2022".</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">pais_equipo</div></td>
+            <td><span class="tipo-badge tipo-A">A (30)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Selección nacional o país al que pertenece el artículo coleccionable.</td>
+          </tr>
+          <tr style="background:#f3eeff">
+            <td><div class="campo-name" style="flex-direction:column;align-items:flex-start;gap:2px">
+              fecha_publicacion
+              <span style="font-size:10px;color:#7b1fa2;font-weight:400">campo continente</span>
+            </div></td>
+            <td><span class="tipo-badge tipo-REG">Registro</span></td>
+            <td>Continente</td>
+            <td class="desc">Campo formado por subcampos. Almacena la fecha en que el artículo fue publicado en el marketplace.</td>
+          </tr>
+          <tr class="sub-row">
+            <td><div class="campo-name">dia</div></td>
+            <td><span class="tipo-badge tipo-N">N (2)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Día de publicación. Subcampo de fecha_publicacion.</td>
+          </tr>
+          <tr class="sub-row">
+            <td><div class="campo-name">mes</div></td>
+            <td><span class="tipo-badge tipo-N">N (2)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Mes de publicación. Subcampo de fecha_publicacion.</td>
+          </tr>
+          <tr class="sub-row">
+            <td><div class="campo-name">anio</div></td>
+            <td><span class="tipo-badge tipo-N">N (4)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Año de publicación. Subcampo de fecha_publicacion.</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">precio</div></td>
+            <td><span class="tipo-badge tipo-R">R (8,2)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Precio en ARS. Tipo Real con 2 decimales. En artículos de intercambio puede ser 0.</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">modo_operacion</div></td>
+            <td><span class="tipo-badge tipo-ENUM">ENUM</span></td>
+            <td>Contenido</td>
+            <td class="desc">"Venta" | "Intercambio" | "Ambos"</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">estado_conservacion</div></td>
+            <td><span class="tipo-badge tipo-ENUM">ENUM</span></td>
+            <td>Contenido</td>
+            <td class="desc">"Mint" | "Muy bueno" | "Bueno" | "Regular"</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name">es_raro</div></td>
+            <td><span class="tipo-badge tipo-L">L (1)</span></td>
+            <td>Contenido</td>
+            <td class="desc">Tipo lógico. Verdadero si es una pieza difícil de conseguir o edición limitada.</td>
+          </tr>
+          <tr>
+            <td><div class="campo-name"><span class="fk-badge">FK →</span> id_vendedor</div></td>
+            <td><span class="tipo-badge tipo-N">N (8)</span></td>
+            <td>Contenido · Clave foránea</td>
+            <td class="desc">Clave foránea que referencia al registro VENDEDOR. Permite conocer quién publicó el artículo.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- JUSTIF CLAVE -->
+    <div class="clave-box">
+      <div class="clave-box-icon">🔑</div>
+      <div>
+        <div class="clave-box-title">Justificación de la clave primaria: id_articulo — N(8)</div>
+        <div class="clave-box-text">
+          Se eligió <strong>id_articulo</strong> como clave primaria porque es un número entero autogenerado que garantiza <strong>unicidad total</strong> para cada registro en la secuencia.<br><br>
+          Se descartó el campo <em>nombre</em> porque dos artículos pueden tener el mismo nombre (por ejemplo, dos figuritas "Maradona 1986" de distintos vendedores). Se descartó <em>id_vendedor</em> porque un mismo vendedor puede publicar múltiples artículos.<br><br>
+          El campo <strong>id_articulo</strong> es una clave <strong>primaria simple</strong> (campo contenido de tipo N(8)), lo que lo hace eficiente para la búsqueda y ordenamiento en la secuencia de registros. Por su parte, <strong>id_vendedor</strong> actúa como <strong>clave foránea</strong>, vinculando este registro con el archivo VENDEDORES y permitiendo relaciones entre archivos.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PSEUDOCODE -->
+  <div class="section">
+    <div class="section-title">Definición literaria del registro</div>
+    <p class="section-sub">Pseudocódigo al estilo de la cátedra de Algoritmos y Estructuras de Datos</p>
+    <div class="pseudo-block">
+      <pre><span class="kw">ACCION</span> MundialMarket <span class="kw">ES;</span>
+<span class="kw">AMBIENTE</span>
+
+<span class="pk">ARTICULO_MUNDIALISTA</span> = <span class="kw">Registro</span>
+    <span class="pk">id_articulo</span>        : Entero;              <span class="cmt">{CLAVE PRIMARIA — única por artículo}</span>
+    nombre              : AN(100);
+    categoria           : (<span class="cmt">"Figurita","Camiseta","Pin","Album","Otro"</span>);
+    mundial             : AN(30);
+    pais_equipo         : A(30);
+    fecha_publicacion = <span class="kw">Registro</span>              <span class="cmt">{CAMPO CONTINENTE}</span>
+        dia  : Entero;
+        mes  : Entero;
+        anio : Entero;
+    <span class="kw">Fin Registro;</span>
+    precio              : Real;
+    modo_operacion      : (<span class="cmt">"Venta","Intercambio","Ambos"</span>);
+    estado_conservacion : (<span class="cmt">"Mint","Muy bueno","Bueno","Regular"</span>);
+    es_raro             : Logico;
+    <span class="fk">id_vendedor</span>         : Entero;              <span class="cmt">{CLAVE FORÁNEA → registro VENDEDOR}</span>
+<span class="kw">Fin Registro;</span>
+
+<span class="kw">ALGORITMO</span>
+    <span class="cmt">{Ejemplo de uso del selector de campo:}</span>
+    Reg.id_articulo := 10000001;
+    Escribir(Reg.nombre);
+    Escribir(Reg.fecha_publicacion.dia, Reg.fecha_publicacion.mes, Reg.fecha_publicacion.anio);
+<span class="kw">FIN.</span></pre>
+    </div>
+  </div>
+
+  <!-- CLASIFICACION -->
+  <div class="section">
+    <div class="section-title">Clasificación de campos y claves</div>
+    <p class="section-sub">Resumen de los conceptos del Tema 7 aplicados en el diseño</p>
+    <div class="cards-grid">
+      <div class="info-card">
+        <h4>Campos contenidos</h4>
+        <p>Campos simples que almacenan un único dato elemental. En este registro: <em>id_articulo</em>, <em>nombre</em>, <em>precio</em>, <em>es_raro</em>, entre otros.</p>
+        <span class="tag">Simples</span>
+      </div>
+      <div class="info-card">
+        <h4>Campo continente</h4>
+        <p><em>fecha_publicacion</em> es un campo que contiene a otros campos más simples: <em>dia</em>, <em>mes</em> y <em>anio</em>, cada uno de tipo N.</p>
+        <span class="tag">Estructurado</span>
+      </div>
+      <div class="info-card">
+        <h4>Clave primaria</h4>
+        <p><em>id_articulo</em> identifica de forma única e irrepetible cada artículo publicado en el sistema.</p>
+        <span class="tag">Única · Simple</span>
+      </div>
+      <div class="info-card">
+        <h4>Clave foránea</h4>
+        <p><em>id_vendedor</em> es una clave secundaria que relaciona el registro ARTICULO con el registro VENDEDOR de otro archivo.</p>
+        <span class="tag">Relación entre archivos</span>
+      </div>
+      <div class="info-card">
+        <h4>Heterogeneidad de datos</h4>
+        <p>El registro combina tipos Entero, Real, AN, A, Lógico y ENUM en un mismo tipo de dato estructurado.</p>
+        <span class="tag">Propiedad del registro</span>
+      </div>
+      <div class="info-card">
+        <h4>Selector de campo</h4>
+        <p>Se usa el operador punto ( <strong>.</strong> ) para acceder a los campos: <em>Reg.nombre</em>, <em>Reg.fecha_publicacion.dia</em>.</p>
+        <span class="tag">Operador de acceso</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Documento generado para el proyecto <strong>MundialMarket</strong> ·
+    Algoritmos y Estructuras de Datos 2026 · Tema 7: Secuencia de Registros
+  </footer>
+
+</div>
+</body>
+</html>
